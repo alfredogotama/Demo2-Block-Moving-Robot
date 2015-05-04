@@ -45,21 +45,25 @@ while(True):
           y = int(moments['m01']/moments['m00'])         # cy = M01/M00
 	  rect = cv2.minAreaRect(largest_contour)        
 	  rect = ((rect[0][0] , rect[0][1]), (rect[1][0], rect[1][1] ), rect[2])
-	  xn = x/640.0 * 2 -1
-
-	  xb = math.fabs(xn) * 127
-	  if xn > 0 and xn < 256:
-	    xb = xb + 128
-
-	  xb = int(round(xb))
-	  ser.write(chr(xb))
-	  print xb
-
 	  box = cv2.cv.BoxPoints(rect)
           box = np.int0(box)
           
 	  #draw every frames 
-	  cv2.drawContours(frame,[box], 0, (0, 0, 255), 2)	
+	  cv2.drawContours(frame,[box], 0, (0, 0, 255), 2)
+	  
+	  #getting numbers from 0 to 255 from the frame
+	  xn = x/640.0 * 2 -1
+
+	  xb = math.fabs(xn) * 127
+	  if xn > 0 and xn < 256:
+	    xb = xb + 127
+
+	  #send ASCII values to microcontroller
+	  xb = int(round(xb))
+	  ser.write(chr(xb))
+	  print xb
+
+	  	
 
     cv2.imshow('frame',frame)
     cv2.imshow('mask',binary_blue)
